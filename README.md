@@ -453,4 +453,314 @@ Comparer les gains obtenus.
 6. (Bonus) Ajouter Nginx en reverse proxy avec gzip, keep-alive, etc.
 
 
+---
+
+Projet 7 : Automatisation de tâches récurrentes avec Cron Jobs
+
+Contexte
+
+Ton application a besoin d’effectuer certaines actions régulièrement : envoyer des emails, supprimer des données obsolètes, générer des rapports… Tu dois mettre en place un système de tâches automatisées avec des Cron Jobs internes.
+
+Objectifs
+
+Planifier l’exécution automatique de fonctions.
+
+Gérer la périodicité (chaque jour, chaque heure…).
+
+Logger les actions exécutées.
+
+
+Stack recommandée
+
+Backend : Go ou Node.js
+
+Lib Cron :
+
+Go : robfig/cron
+
+Node : node-cron ou agenda
+
+
+Logs : fichiers log ou base de données
+
+
+Fonctionnalités
+
+Lancement d’un job de nettoyage des utilisateurs inactifs.
+
+Envoi d’un rapport quotidien par email.
+
+Création d’un log des exécutions.
+
+
+Étapes de développement
+
+1. Configurer la lib de Cron
+
+Définir une tâche chaque X minutes/secondes.
+
+
+
+2. Créer une fonction cible
+
+Exemple : suppression des utilisateurs inactifs.
+
+
+
+3. Logger l'exécution
+
+Stocker la date, l'action effectuée, le résultat.
+
+
+
+4. Créer d’autres tâches automatisées
+
+Ex : sauvegarde de la base, alertes d’anomalies.
+
+
+
+5. Tester la planification
+
+Démarrer l’appli et observer les tâches.
+
+
+
+
+
+---
+
+Projet 8 : Intégration d’API tierces (ex : météo, crypto, traduction)
+
+Contexte
+
+Tu développes une app qui doit récupérer des infos depuis des services externes (ex. météo, prix crypto, ou traduction de texte). Tu dois apprendre à faire des appels API externes, parser la réponse, et intégrer les données à ton backend.
+
+Objectifs
+
+Utiliser http client pour faire des appels API.
+
+Gérer les tokens d’authentification si nécessaire.
+
+Stocker ou afficher les données récupérées.
+
+
+Stack recommandée
+
+Backend : Go (net/http) ou Node.js (axios, fetch)
+
+API à intégrer :
+
+Météo : OpenWeatherMap
+
+Crypto : CoinGecko ou Binance
+
+Traduction : DeepL, Google Translate API
+
+
+
+Fonctionnalités
+
+Endpoint : /weather?city=Dakar → données météo.
+
+Endpoint : /crypto?symbol=BTC → prix en temps réel.
+
+Endpoint : /translate?text=Bonjour&to=en → traduction.
+
+
+Étapes de développement
+
+1. Choisir une API publique (gratuite de préférence)
+
+Créer une clé si nécessaire.
+
+
+
+2. Faire un appel HTTP GET vers cette API
+
+Gérer les headers, tokens, etc.
+
+
+
+3. Parser et formater la réponse
+
+Extraire uniquement ce qui t’intéresse.
+
+
+
+4. Exposer les données via ton propre backend
+
+Créer des endpoints /weather, /crypto, /translate.
+
+
+
+5. (Bonus) Cacher les résultats pendant 1min avec un cache
+
+
+
+
+---
+
+
+
+Projet 9 : Gestion de Webhooks (récepteurs d'événements)
+
+Contexte
+
+Tu travailles sur une application qui doit réagir à des événements venant d'autres services (comme Stripe, GitHub, ou ton propre microservice). Ces services envoient des webhooks : des requêtes HTTP POST contenant des données d’événement. Tu dois pouvoir les recevoir, vérifier, stocker et traiter.
+
+Objectifs
+
+Créer un endpoint pour recevoir les webhooks.
+
+Sécuriser les données (signature HMAC, token secret…).
+
+Traiter et logger les événements reçus.
+
+
+Stack recommandée
+
+Backend : Go ou Node.js
+
+Signature HMAC : Go crypto/hmac, Node crypto
+
+Base de données : MongoDB, PostgreSQL
+
+
+Fonctionnalités
+
+POST /webhook/stripe : réception d’un paiement.
+
+POST /webhook/github : réception d’un push.
+
+Enregistrement en base des événements reçus.
+
+Traitement des événements selon le type.
+
+
+Étapes de développement
+
+1. Créer une route webhook
+
+Ex : /webhook/service-name
+
+
+
+2. Valider la signature
+
+Vérifier que l’appel vient bien du bon service.
+
+
+
+3. Logger les données
+
+Sauvegarder event_type, payload, timestamp.
+
+
+
+4. Traiter l’événement
+
+Ex : paiement confirmé → changement d’état en DB.
+
+
+
+5. Répondre au service
+
+Retourner un 200 OK ou un 400 en cas d’échec.
+
+
+
+6. (Bonus) Retenter les événements échoués automatiquement.
+
+
+
+
+---
+
+Projet 10 : Mise en place d’une architecture microservices
+
+Contexte
+
+Ton application devient complexe. Tu veux la découper en microservices pour plus de maintenabilité, scalabilité et autonomie des composants. Chaque microservice a sa responsabilité (users, produits, notifications…).
+
+Objectifs
+
+Concevoir plusieurs services indépendants.
+
+Permettre leur communication (HTTP ou message broker).
+
+Gérer l’orchestration avec un API Gateway.
+
+Conteneuriser le tout avec Docker.
+
+
+Stack recommandée
+
+Langages : Go, Node.js
+
+Communication : REST, gRPC ou Message Broker (NATS, RabbitMQ)
+
+Gateway : API Gateway maison ou Kong / Traefik
+
+Orchestration : Docker Compose ou Kubernetes (si tu veux pousser)
+
+
+Exemple d’architecture
+
+Service Auth : inscription / connexion
+
+Service Users : gestion du profil
+
+Service Products : produits, stock
+
+Service Notifications : emails, SMS, webhooks
+
+API Gateway : route les requêtes vers les bons services
+
+
+Étapes de développement
+
+1. Définir les domaines fonctionnels
+
+Découper chaque service et son rôle.
+
+
+
+2. Créer les services indépendants
+
+Chacun avec son propre projet, base de données, port.
+
+
+
+3. Créer un moyen de communication
+
+Soit en REST entre services, soit avec un broker (ex : RabbitMQ).
+
+
+
+4. Déployer avec Docker
+
+Un docker-compose.yml pour tous les services.
+
+
+
+5. Ajouter un API Gateway
+
+Pour centraliser les requêtes entrantes.
+
+
+
+6. (Bonus) Ajouter une interface admin
+
+Pour tester tous les services depuis une UI unique.
+
+
+
+
+
+---
+
+
+
+
+
 
